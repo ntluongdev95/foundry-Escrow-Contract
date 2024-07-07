@@ -39,11 +39,11 @@ contract TestEscrowFactory is Test {
 
     function testRevertIfFeeGreaterThanPrice() public {
         vm.startPrank(BUYER);
-         token.mint(BUYER, PRICE );
-        token.approve(address(factory), PRICE );
+        ERC20Mock(address(i_tokenContract)).mint(BUYER, PRICE);
+        ERC20Mock(address(i_tokenContract)).approve(address(escrowFactory), PRICE);
         uint256 arbiterFee = PRICE + 1;
-        vm.expectRevert(abi.encodeWithSelector(EscrowFactory.EscrowFactory__FeeExceedsPrice.selector, PRICE, arbiterFee));
-        factory.createNewEscrow(PRICE, token, BUYER, SELLER, ARBITER, arbiterFee);
+        vm.expectRevert(abi.encodeWithSelector(IEscrow.Escrow__FeeExceedsPrice.selector, PRICE, arbiterFee));
+        escrowFactory.newEscrow(PRICE, i_tokenContract, SELLER, ARBITER, arbiterFee, SALT1);
         vm.stopPrank();
     }
 

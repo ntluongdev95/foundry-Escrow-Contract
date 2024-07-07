@@ -43,7 +43,7 @@ contract TestEscrowFactory is Test {
         token.approve(address(factory), PRICE );
         uint256 arbiterFee = PRICE + 1;
         vm.expectRevert(abi.encodeWithSelector(EscrowFactory.EscrowFactory__FeeExceedsPrice.selector, PRICE, arbiterFee));
-        factory.createNewEscrow(PRICE, token, BUYER, SELLER, ARBITER, arbiterFee);
+        factory.createNewEscrow(PRICE, token, BUYER, SELLER, ARBITER, ARBITER_FEE);
         vm.stopPrank();
     }
 

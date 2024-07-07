@@ -37,17 +37,6 @@ contract TestEscrowFactory is Test {
         assertEq(Escrow(computedAddress).getPrice(), PRICE);
     }
 
-    function testRevertIfFeeGreaterThanPrice() public {
-        vm.startPrank(BUYER);
-         token.mint(BUYER, PRICE );
-        token.approve(address(factory), PRICE );
-        uint256 arbiterFee = PRICE + 1;
-        vm.expectRevert(abi.encodeWithSelector(EscrowFactory.EscrowFactory__FeeExceedsPrice.selector, PRICE, arbiterFee));
-        factory.createNewEscrow(PRICE, token, BUYER, SELLER, ARBITER, arbiterFee);
-        vm.stopPrank();
-    }
-
-
     function test_RevertsIfTokenTxFails() public {
         ERC20MockFailedTransfer failedTxToken = new ERC20MockFailedTransfer();
         uint256 amount = PRICE - 1e16;
