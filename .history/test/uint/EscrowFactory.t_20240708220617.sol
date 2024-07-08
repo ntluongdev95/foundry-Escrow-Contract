@@ -47,6 +47,14 @@ contract TestEscrowFactory is Test {
         vm.stopPrank();
     }
 
+      function testSellerZeroReverts() public {
+         vm.startPrank(BUYER);
+         token.mint(BUYER, PRICE );
+        token.approve(address(factory), PRICE );
+        vm.expectRevert(abi.encodeWithSelector(EscrowFactory.EscrowFactory__FeeExceedsPrice.selector, PRICE, arbiterFee));
+      }
+
+
 
     function test_RevertsIfTokenTxFails() public {
         ERC20MockFailedTransfer failedTxToken = new ERC20MockFailedTransfer();

@@ -17,7 +17,7 @@ contract TestEscrow is Test{
     address public SELLER;
     address public ARBITER;
     uint256 public constant ARBITER_FEE = 1e16;
-    function setup() external{
+    function setUp() external{
         token = new ERC20Mock();
         BUYER = makeAddr("buyer");
         SELLER = makeAddr("seller");
@@ -26,4 +26,25 @@ contract TestEscrow is Test{
         factory = deployed.run();
     }
 
+    function testDeployEscrowFromFactory() public {
+        vm.startPrank(BUYER);
+        ERC20Mock(address(token)).mint(BUYER, PRICE);
+        ERC20Mock(address(token)).approve(address(factory), PRICE);
+        address escrow = factory.createNewEscrow(PRICE, token, BUYER, SELLER, ARBITER, ARBITER_FEE);
+        vm.stopPrank();
+        assertEq(Escrow(escrow).getPrice(), PRICE);
+        assertEq(address(Escrow(escrow).getTokenContract()), address(token));
+        assertEq(Escrow(escrow).getBuyer(), BUYER);
+        assertEq(Escrow(escrow).getSeller(), SELLER);
+        assertEq(Escrow(escrow).getArbiter(), ARBITER);
+        assertEq(Escrow(escrow).getArbiterFee(), ARBITER_FEE);
+    }
+
+     function testConfirmReceiptRevertsOnTokenTxFail() public {
+        vm.startPrank(BUYER);
+        ERC20MockFailedTran
+     }
+
+
 }
+
